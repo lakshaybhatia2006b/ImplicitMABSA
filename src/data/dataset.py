@@ -31,23 +31,24 @@ IMAGE_DIR = RAW_DIR / "images"
 SUPPORTED_EXTS = [".jpg", ".jpeg", ".png", ".gif"]
 
 
+_DS_IMG_CACHE = None
+
+def _get_image_cache():
+    global _DS_IMG_CACHE
+    if _DS_IMG_CACHE is None:
+        _DS_IMG_CACHE = {}
+        if RAW_DIR.exists():
+            for ext in ["*.jpg", "*.jpeg", "*.png", "*.gif"]:
+                for p in RAW_DIR.rglob(ext):
+                    if p.is_file():
+                        _DS_IMG_CACHE[p.stem] = p
+    return _DS_IMG_CACHE
+
 def _find_image(image_id) -> Optional[Path]:
     if image_id is None:
         return None
-    image_dirs = [IMAGE_DIR]
-    if RAW_DIR.exists():
-        for p in RAW_DIR.rglob("image*"):
-            if p.is_dir() and p not in image_dirs:
-                image_dirs.append(p)
-
-    for idir in image_dirs:
-        if not idir.exists():
-            continue
-        for ext in ["", *SUPPORTED_EXTS]:
-            p = idir / f"{image_id}{ext}"
-            if p.exists() and p.is_file():
-                return p
-    return None
+    cache = _get_image_cache()
+    return cache.get(str(image_id))
 
 
 def _preprocess_image(path: Path):

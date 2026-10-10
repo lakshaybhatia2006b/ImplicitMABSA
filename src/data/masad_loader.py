@@ -241,35 +241,29 @@ def _encode_sentiment(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def _build_image_index() -> Dict[str, Path]:
+    """Index all images in data/raw by their stem/ID."""
+    index = {}
+    if not RAW_DIR.exists():
+        return index
+    for ext in ["*.jpg", "*.jpeg", "*.png", "*.gif"]:
+        for p in RAW_DIR.rglob(ext):
+            if p.is_file():
+                index[p.stem] = p
+    return index
+
+
 def _check_images(df: pd.DataFrame) -> Tuple[int, int]:
     """Count how many samples have an accessible image file."""
     if "image_id" not in df.columns or not RAW_DIR.exists():
         return 0, len(df)
     
-    # Candidate image directories
-    image_dirs = [IMAGE_DIR]
-    for p in RAW_DIR.rglob("image*"):
-        if p.is_dir() and p not in image_dirs:
-            image_dirs.append(p)
-    
-    unique_ids = df["image_id"].dropna().unique()
+    img_index = _build_image_index()
+    unique_ids = df["image_id"].dropna().astype(str).unique()
     if len(unique_ids) == 0:
         return 0, 0
 
-    found = 0
-    for img_id in unique_ids:
-        # Check across candidate image directories
-        id_found = False
-        for idir in image_dirs:
-            if not idir.exists():
-                continue
-            for ext in ["", ".jpg", ".jpeg", ".png", ".gif"]:
-                if (idir / f"{img_id}{ext}").exists():
-                    found += 1
-                    id_found = True
-                    break
-            if id_found:
-                break
+    found = sum(1 for img_id in unique_ids if img_id in img_index)
     return found, len(unique_ids)
 
 

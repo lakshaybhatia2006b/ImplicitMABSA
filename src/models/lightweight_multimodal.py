@@ -26,24 +26,25 @@ SUPPORTED_EXTS = [".jpg", ".jpeg", ".png", ".gif"]
 IMG_FEATURE_DIM = 96  # 32 bins per RGB channel + 2x2 spatial color grid
 
 
+_IMAGE_CACHE = None
+
+def get_image_cache() -> Dict[str, Path]:
+    global _IMAGE_CACHE
+    if _IMAGE_CACHE is None:
+        _IMAGE_CACHE = {}
+        if RAW_DIR.exists():
+            for ext in ["*.jpg", "*.jpeg", "*.png", "*.gif"]:
+                for p in RAW_DIR.rglob(ext):
+                    if p.is_file():
+                        _IMAGE_CACHE[p.stem] = p
+    return _IMAGE_CACHE
+
 def find_image_file(image_id) -> Optional[Path]:
-    """Find image on disk across candidate raw folders."""
+    """Find image on disk across candidate raw folders using indexed cache."""
     if image_id is None or (isinstance(image_id, float) and np.isnan(image_id)):
         return None
-    image_dirs = [IMAGE_DIR]
-    if RAW_DIR.exists():
-        for p in RAW_DIR.rglob("image*"):
-            if p.is_dir() and p not in image_dirs:
-                image_dirs.append(p)
-
-    for idir in image_dirs:
-        if not idir.exists():
-            continue
-        for ext in ["", *SUPPORTED_EXTS]:
-            p = idir / f"{image_id}{ext}"
-            if p.exists() and p.is_file():
-                return p
-    return None
+    cache = get_image_cache()
+    return cache.get(str(image_id))
 
 
 def extract_visual_features_from_image(image_input) -> Tuple[np.ndarray, bool]:

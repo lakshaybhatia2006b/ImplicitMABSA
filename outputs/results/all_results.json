@@ -1,9 +1,23 @@
 {
   "TF-IDF+LogReg": {
     "model": "TF-IDF+LogReg",
-    "accuracy": 0.8,
-    "macro_precision": 0.7946,
-    "macro_recall": 0.8056,
-    "macro_f1": 0.7964
+    "accuracy": 0.6389,
+    "macro_precision": 0.6675,
+    "macro_recall": 0.6062,
+    "macro_f1": 0.5847
+  },
+  "Vision-Only (Color+Spatial)": {
+    "model": "Vision-Only (Color+Spatial)",
+    "accuracy": 0.5556,
+    "macro_precision": 0.5625,
+    "macro_recall": 0.5625,
+    "macro_f1": 0.5556
+  },
+  "Multimodal Fusion (TF-IDF+Vision)": {
+    "model": "Multimodal Fusion (TF-IDF+Vision)",
+    "accuracy": 0.6111,
+    "macro_precision": 0.6039,
+    "macro_recall": 0.6,
+    "macro_f1": 0.6
   }
 }

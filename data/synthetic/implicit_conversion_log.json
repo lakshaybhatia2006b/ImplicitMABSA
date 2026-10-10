@@ -2,20 +2,22 @@
   "description": "Implicit conversion log. All synthetic samples are derived from MASAD explicit ABSA data by masking aspect terms. is_synthetic=True on every row. These are NOT naturally-occurring implicit examples.",
   "per_split": [
     {
-      "total": 30,
-      "converted": 18,
-      "skipped": 12,
+      "total": 111,
+      "converted": 69,
+      "skipped": 42,
       "skip_reasons": {
-        "text_too_short_after_mask": 12
+        "text_too_short_after_mask": 40,
+        "missing_field": 2
       },
       "split": "train"
     },
     {
-      "total": 20,
-      "converted": 15,
-      "skipped": 5,
+      "total": 60,
+      "converted": 36,
+      "skipped": 24,
       "skip_reasons": {
-        "text_too_short_after_mask": 5
+        "text_too_short_after_mask": 23,
+        "missing_field": 1
       },
       "split": "test"
     }

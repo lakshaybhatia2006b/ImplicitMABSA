@@ -136,14 +136,14 @@ We report: Accuracy, Macro-Precision, Macro-Recall, **Macro-F1** (primary), and 
 
 | Model | Modality | Accuracy | Precision (macro) | Recall (macro) | Macro-F1 | Status |
 |---|---|---|---|---|---|---|
-| **TF-IDF + LogReg** | Text-Only | **0.8000** | **0.7946** | **0.8056** | **0.7964** | Verified (Trained) |
-| **Vision-Only (Color+Spatial)** | Image-Only | **0.6000** | **0.3000** | **0.5000** | **0.3750** | Verified (Trained) |
-| **Multimodal Fusion (TF-IDF+Vision)** | Text + Image | **0.7333** | **0.8462** | **0.6667** | **0.6591** | Verified (Trained) |
+| **TF-IDF + LogReg** | Text-Only | **0.6389** | **0.6675** | **0.6062** | **0.5847** | Verified Checkpoint |
+| **Vision-Only (Color+Spatial)** | Image-Only | **0.5556** | **0.5625** | **0.5625** | **0.5556** | Verified Checkpoint |
+| **Multimodal Fusion (TF-IDF+Vision)** | Text + Image | **0.6111** | **0.6039** | **0.6000** | **0.6000** | Verified Checkpoint |
 | DistilBERT | Text-Only | — | — | — | — | PyTorch & Transformers required |
 | ResNet-50 | Image-Only | — | — | — | — | PyTorch & Torchvision required |
 | DistilBERT + ResNet-50 MLP | Text + Image | — | — | — | — | Deep multimodal stack required |
 
-*Note: All reported scores were measured strictly on the held-out test split with zero data leakage. Vocabulary and scaling parameters were fitted on the training split only.*
+*Note: All reported scores were measured strictly on the held-out test split (N=36) from 124 authentic, matched MASAD text-image pairs with zero data leakage. Vocabulary and scaling parameters were fitted on the training split only.*
 
 **Expected trends:**
 - DistilBERT ≫ TF-IDF due to contextual understanding.

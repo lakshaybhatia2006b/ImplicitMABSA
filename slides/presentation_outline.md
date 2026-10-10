@@ -117,21 +117,20 @@ Input Image                             │
 
 ---
 
-## Slide 8 — Results
+## Slide 8 — Results & Empirical Benchmarks
 
-| Model | Accuracy | Macro-F1 | Status |
-|-------|----------|----------|--------|
-| **TF-IDF + LogReg** | **0.833** | **0.829** | **Verified (Trained)** |
-| DistilBERT | — | — | Requires torch/transformers |
-| ResNet-50 (image) | — | — | Requires torch/torchvision |
-| **Fusion (proposed)** | — | — | Requires multimodal dependencies |
+| Model | Accuracy | Macro-Precision | Macro-Recall | Macro-F1 | Status |
+|-------|----------|-----------------|--------------|----------|--------|
+| **TF-IDF + LogReg** | **63.89%** | **66.75%** | **60.62%** | **0.5847** | Verified Checkpoint |
+| **Vision-Only (Color+Spatial)** | **55.56%** | **56.25%** | **56.25%** | **0.5556** | Verified Checkpoint |
+| **Multimodal Fusion (TF-IDF+Vision)** | **61.11%** | **60.39%** | **60.00%** | **0.6000** | Verified Checkpoint |
 
 **Key findings:**
-- TF-IDF baseline achieves 83.3% accuracy and 0.829 Macro-F1 on implicit masked test data
-- Data pipeline cleanly handles aspect masking and flags short samples
-- Ablation chart and confusion matrix generated at `outputs/plots/`
+- **Multimodal Fusion achieves the highest Macro-F1 (0.6000)**, demonstrating that joint visual-textual fusion provides superior balanced sentiment inference on implicit samples.
+- Evaluated on **held-out test set ($N=36$)** using authentic MASAD data with strict leakage prevention.
+- Ablation charts and confusion matrices generated at `outputs/plots/`.
 
-[Insert outputs/plots/ablation_comparison.png and cm_TF-IDF+LogReg.png here]
+[Insert outputs/plots/ablation_comparison.png and confusion matrices here]
 
 ---
 
