@@ -1,0 +1,9 @@
+{
+  "TF-IDF+LogReg": {
+    "model": "TF-IDF+LogReg",
+    "accuracy": 0.8,
+    "macro_precision": 0.7946,
+    "macro_recall": 0.8056,
+    "macro_f1": 0.7964
+  }
+}

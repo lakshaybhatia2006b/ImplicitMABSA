@@ -1,0 +1,51 @@
+{
+  "splits": {
+    "train": {
+      "n_samples": 30,
+      "columns": [
+        "image_id",
+        "text",
+        "aspect",
+        "sentiment",
+        "image_url",
+        "tags",
+        "label",
+        "split"
+      ],
+      "sentiment_distribution": {
+        "-1": 15,
+        "1": 15
+      },
+      "top_aspects": [
+        "apple"
+      ],
+      "images_found": 0,
+      "images_total_unique": 30,
+      "has_images": false
+    },
+    "test": {
+      "n_samples": 20,
+      "columns": [
+        "image_id",
+        "text",
+        "aspect",
+        "sentiment",
+        "image_url",
+        "tags",
+        "label",
+        "split"
+      ],
+      "sentiment_distribution": {
+        "-1": 10,
+        "1": 10
+      },
+      "top_aspects": [
+        "apple"
+      ],
+      "images_found": 0,
+      "images_total_unique": 20,
+      "has_images": false
+    }
+  },
+  "image_availability": "LIMITATION: Image directory not found at data/raw/images/. Text-only pipeline is fully functional. Image-dependent models require downloading images from the MASAD Google Drive link."
+}
