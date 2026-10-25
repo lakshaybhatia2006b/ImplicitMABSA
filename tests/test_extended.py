@@ -169,7 +169,7 @@ class TestImplicitConversion(unittest.TestCase):
             "sentiment": "positive",
             "image_id": "img_001"
         }])
-        syn_df, stats = convert_split(df, "test_prov")
+        syn_df, stats = convert_split(df, "test_prov", save_to_disk=False)
         self.assertEqual(len(syn_df), 1)
         row = syn_df.iloc[0]
         self.assertTrue(row["is_synthetic"])
@@ -183,7 +183,7 @@ class TestImplicitConversion(unittest.TestCase):
             {"text": "", "aspect": "food", "label": 1, "sentiment": "positive", "image_id": "x"},
             {"text": "Great tasting dish overall", "aspect": "", "label": 1, "sentiment": "positive", "image_id": "y"},
         ])
-        syn_df, stats = convert_split(df, "test_skip")
+        syn_df, stats = convert_split(df, "test_skip", save_to_disk=False)
         self.assertEqual(stats["skipped"], 2)
         self.assertEqual(len(syn_df), 0)
 

@@ -104,7 +104,7 @@ def _needs_manual_review(confidence: float, label: int,
 
 # ── Core Conversion ────────────────────────────────────────────────────────────
 
-def convert_split(df: pd.DataFrame, split: str) -> pd.DataFrame:
+def convert_split(df: pd.DataFrame, split: str, save_to_disk: bool = True) -> pd.DataFrame:
     """
     Convert one split of explicit ABSA data to candidate implicit samples.
 
@@ -171,10 +171,11 @@ def convert_split(df: pd.DataFrame, split: str) -> pd.DataFrame:
     print(f"  Skip reasons: {stats['skip_reasons']}")
 
     # Save to disk
-    SYNTHETIC_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = SYNTHETIC_DIR / f"implicit_{split}.json"
-    synthetic_df.to_json(out_path, orient="records", indent=2, force_ascii=False)
-    print(f"  Saved to {out_path}")
+    if save_to_disk:
+        SYNTHETIC_DIR.mkdir(parents=True, exist_ok=True)
+        out_path = SYNTHETIC_DIR / f"implicit_{split}.json"
+        synthetic_df.to_json(out_path, orient="records", indent=2, force_ascii=False)
+        print(f"  Saved to {out_path}")
 
     stats["split"] = split
     return synthetic_df, stats

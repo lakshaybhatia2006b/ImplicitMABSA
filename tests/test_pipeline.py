@@ -46,7 +46,7 @@ class TestImplicitMABSAPipeline(unittest.TestCase):
             "image_id": "test_01"
         }])
         from src.data.implicit_converter import convert_split
-        syn_df, stats = convert_split(df, "test")
+        syn_df, stats = convert_split(df, "test", save_to_disk=False)
         self.assertEqual(len(syn_df), 1)
         row = syn_df.iloc[0]
         self.assertTrue(row["is_synthetic"])
