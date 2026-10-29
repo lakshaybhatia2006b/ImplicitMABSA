@@ -1,0 +1,68 @@
+{
+  "dataset_name": "MASAD (Multimodal Aspect-Based Sentiment Analysis Dataset)",
+  "reference": "Zhou et al., Neurocomputing 2021",
+  "source_url": "https://github.com/DrJZhou/MASAD",
+  "archive_google_drive_id": "19YJ8vEYCb-uEKUqSGFmysUTvNzxhVKFE",
+  "extraction_summary": {
+    "total_raw_text_records": 171,
+    "total_image_files_on_disk": 124,
+    "unique_image_stems": 124,
+    "corrupt_unreadable_images": 0
+  },
+  "splits": {
+    "train": {
+      "raw_samples": 111,
+      "matched_image_pairs": 80,
+      "missing_image_records": 31,
+      "coverage_pct": 72.07,
+      "sentiment_distribution": {
+        "positive": 56,
+        "negative": 55
+      },
+      "label_distribution": {
+        "1": 56,
+        "-1": 55
+      },
+      "aspect_count": 26,
+      "top_aspects": {
+        "apple": 30,
+        "horse": 17,
+        "graden": 13,
+        "factory": 8,
+        "insect": 6,
+        "cat": 5,
+        "forest": 4,
+        "flower": 3,
+        "glass": 3,
+        "tree": 2
+      }
+    },
+    "test": {
+      "raw_samples": 60,
+      "matched_image_pairs": 44,
+      "missing_image_records": 16,
+      "coverage_pct": 73.33,
+      "sentiment_distribution": {
+        "negative": 30,
+        "positive": 30
+      },
+      "label_distribution": {
+        "-1": 30,
+        "1": 30
+      },
+      "aspect_count": 22,
+      "top_aspects": {
+        "apple": 20,
+        "cat": 8,
+        "graden": 6,
+        "church": 2,
+        "factory": 2,
+        "food": 2,
+        "forest": 2,
+        "horse": 2,
+        "chocolate": 2,
+        "boat": 2
+      }
+    }
+  }
+}

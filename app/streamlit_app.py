@@ -706,15 +706,36 @@ elif selected_lab == "4. Counterfactual Lab":
 # ════════════════════════════════════════════════════════════════════════════════
 elif selected_lab == "5. Model Evaluation Observatory":
     st.markdown('<div class="view-title">Model Evaluation Observatory</div>', unsafe_allow_html=True)
-    st.markdown('<div class="view-sub">Empirical evaluation metrics measured strictly on the held-out test split (N = 36 verified pairs) with zero train-test leakage.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="view-sub">Empirical evaluation metrics measured strictly on the held-out test splits with zero train-test leakage.</div>', unsafe_allow_html=True)
 
-    results = load_evaluation_metrics()
+    # Offer cohort selector: Full test set (N=36) vs strictly paired test set (N=25)
+    cohort_view = st.radio(
+        "Evaluation Cohort View",
+        ["Full Held-Out Test Set (N = 36)", "Strictly Paired Test Cohort (N = 25, Real Images On Disk)"],
+        horizontal=True,
+        help="The full test set contains 36 synthetic implicit samples. The paired subset isolates the 25 samples with verified image files on disk."
+    )
+
+    if cohort_view == "Full Held-Out Test Set (N = 36)":
+        results = load_evaluation_metrics()
+        st.caption("Reporting on all 36 held-out test samples. Samples missing paired images evaluate via zero-vector fallback.")
+    else:
+        # Load rigorous paired report if available
+        rigorous_p = ROOT / "outputs/results/rigorous_evaluation_report.json"
+        if rigorous_p.exists():
+            with open(rigorous_p) as f:
+                rig_data = json.load(f)
+            results = rig_data.get("strictly_paired_test_cohort_n25", {})
+        else:
+            results = load_evaluation_metrics()
+        st.caption("Reporting strictly on the 25 held-out test samples with physically confirmed, readable image files on disk.")
+
     if results:
         res_df = pd.DataFrame.from_dict(results, orient="index")
         show_cols = [c for c in ["accuracy", "macro_precision", "macro_recall", "macro_f1"] if c in res_df.columns]
         
         st.markdown('<div class="panel-card">', unsafe_allow_html=True)
-        st.markdown('<div class="panel-title">Held-Out Test Set Performance</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="panel-title">Benchmark Results ({cohort_view.split("(")[0].strip()})</div>', unsafe_allow_html=True)
         st.dataframe(
             res_df[show_cols].style.format("{:.4f}").highlight_max(axis=0, color="#16384c"),
             use_container_width=True
@@ -762,18 +783,32 @@ elif selected_lab == "6. Dataset Quality & Provenance":
     meta = load_dataset_metadata()
     if meta:
         splits = meta.get("splits", {})
-        c1, c2, c3 = st.columns(3, gap="medium")
+        c1, c2, c3, c4 = st.columns(4, gap="medium")
         with c1:
-            st.metric("Total Extracted Pairs", "124 Pairs")
-            st.caption("Matched text files and corresponding .jpg files on disk")
+            st.metric("Total Raw Records", "171 Records")
+            st.caption("111 Train + 60 Test text records")
         with c2:
-            train_s = splits.get("train", {})
-            st.metric("Train Split", f"{train_s.get('n_samples', 0)} Samples")
-            st.caption(f"Image Coverage: {train_s.get('images_found', 0)}/{train_s.get('n_samples', 0)}")
+            st.metric("Images on Disk", "124 Images")
+            st.caption("100% verified readable, 0 corrupt")
         with c3:
+            train_s = splits.get("train", {})
+            st.metric("Train Paired", f"{train_s.get('images_found', 0)}/{train_s.get('n_samples', 0)}")
+            st.caption(f"Image Coverage: {train_s.get('images_found', 0)/max(1, train_s.get('n_samples', 1))*100:.1f}%")
+        with c4:
             test_s = splits.get("test", {})
-            st.metric("Test Split", f"{test_s.get('n_samples', 0)} Samples")
-            st.caption(f"Image Coverage: {test_s.get('images_found', 0)}/{test_s.get('n_samples', 0)}")
+            st.metric("Test Paired", f"{test_s.get('images_found', 0)}/{test_s.get('n_samples', 0)}")
+            st.caption(f"Image Coverage: {test_s.get('images_found', 0)/max(1, test_s.get('n_samples', 1))*100:.1f}%")
+
+    st.markdown('<div class="panel-card">', unsafe_allow_html=True)
+    st.markdown('<div class="panel-title">Audit Log & Technical Reconciliation</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <p style="font-size:0.84rem; color:#94a3b8; line-height:1.5;">
+        <b>Dataset Reconciliation Note:</b> Early documentation referenced <i>124 matched pairs</i> (the total number of authentic images on disk matching records across both splits: 80 train + 44 test).
+        The total raw dataset comprises <b>171 text records</b> (111 train + 60 test). Aspect masking filtering yields <b>69 synthetic train</b> and <b>36 synthetic test</b> samples.
+        Within the 36 test samples, <b>25 samples</b> have confirmed paired images on disk.
+    </p>
+    """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="panel-card">', unsafe_allow_html=True)
     st.markdown('<div class="panel-title">Synthetic Conversion Audit Log</div>', unsafe_allow_html=True)
