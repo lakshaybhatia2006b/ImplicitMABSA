@@ -415,6 +415,46 @@ class TestStreamlitApp(unittest.TestCase):
         self.assertEqual(len(at.exception), 0,
             f"Streamlit app raised exceptions: {[str(e) for e in at.exception]}")
 
+    def test_aspect_presence_and_absence_validation(self):
+        """Verify aspect presence detection correctly distinguishes matching vs absent terms."""
+        from app.streamlit_app import check_aspect_presence
+        text = "The food was delicious, but the service was slow."
+        
+        # Test absent aspect (the raccoon user case)
+        found, match, diff_html, masked = check_aspect_presence(text, "Racoon")
+        self.assertFalse(found)
+        self.assertIsNone(match)
+        self.assertEqual(masked, text)
+
+        # Test present aspect
+        found, match, diff_html, masked = check_aspect_presence(text, "food")
+        self.assertTrue(found)
+        self.assertEqual(match.lower(), "food")
+        self.assertNotIn("food", masked.lower())
+        self.assertIn("diff-strike", diff_html)
+
+    def test_candidate_aspect_extraction(self):
+        """Verify non-stopword noun candidate suggestions are extracted from text."""
+        from app.streamlit_app import extract_candidate_aspects
+        text = "The food was delicious, but the service was slow."
+        candidates = extract_candidate_aspects(text)
+        self.assertIn("food", candidates)
+        self.assertIn("service", candidates)
+        self.assertNotIn("the", candidates)
+        self.assertNotIn("was", candidates)
+
+    def test_vocabulary_coverage_analysis(self):
+        """Verify vocabulary coverage correctly detects recognized vs OOV tokens."""
+        from app.streamlit_app import analyze_vocabulary_coverage, load_text_model
+        m_t = load_text_model()
+        if m_t is None:
+            self.skipTest("Text model not loaded")
+        text = "The food was delicious, but the service was slow."
+        info = analyze_vocabulary_coverage(text, m_t)
+        self.assertIn("the", info["in_vocab"])
+        self.assertIn("food", info["oov"])
+        self.assertLess(info["ratio"], 0.7)
+
 
 # ════════════════════════════════════════════════════════════════════════════
 
